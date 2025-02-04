@@ -4,6 +4,8 @@ const Metamask = () => {
   return (
     <div
       style={{
+        backgroundColor: "white",
+        color: "black",
         border: "0.5px solid #ccc",
         display: "inline-block",
         textAlign: "center",
@@ -14,7 +16,7 @@ const Metamask = () => {
     >
       <p>
         {" "}
-        It apprears that Metamask is not installed, <br />
+        It appears that Metamask is not installed, <br />
         Download <a href="https://metamask.io/">Metamask</a> to continue.
       </p>
     </div>
