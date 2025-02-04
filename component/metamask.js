@@ -15,9 +15,15 @@ const Metamask = () => {
       }}
     >
       <p>
-        {" "}
         It appears that Metamask is not installed, <br />
-        Download <a href="https://metamask.io/">Metamask</a> to continue.
+        Download{" "}
+        <a
+          href="https://metamask.io/"
+          style={{ color: "black", textDecoration: "none", fontWeight: "bold" }}
+        >
+          Metamask
+        </a>{" "}
+        to continue.
       </p>
     </div>
   );
