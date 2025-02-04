@@ -88,7 +88,7 @@ const Index = () => {
 
       <section className="container d-flex">
         <main>
-          <h1 className="main-title"> Haven 🚀</h1>
+          <h1 className="main-title"> Haven </h1>
 
           <p className="main-desc">
             Stability, Redesigned.
