@@ -62,20 +62,36 @@ const Index = () => {
       {/* Navbar */}
       <nav className="fren-nav d-flex">
         <div>
-          <h3>MENU_</h3>
+          <h3>ABOUT</h3>
         </div>
         <div className="d-flex" style={{ marginLeft: "auto" }}>
           <div>
-            <button className="btn connect-btn" onClick={connectWeb3}>
-              {client.isConnected ? (
-                <>
-                  {client.address.slice(0, 4)}...
-                  {client.address.slice(38, 42)}
-                </>
-              ) : (
-                <>Connect Wallet</>
-              )}
-            </button>
+            <button
+  onClick={connectWeb3}
+  style={{
+    backgroundColor: "white",
+    color: "black",
+    border: "2px solid black",
+    padding: "10px 15px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease, color 0.3s ease",
+    fontWeight: "bold",
+  }}
+  onMouseOver={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+  onMouseOut={(e) => (e.target.style.backgroundColor = "white")}
+>
+  {client.isConnected ? (
+    <>
+      {client.address.slice(0, 4)}...
+      {client.address.slice(38, 42)}
+    </>
+  ) : (
+    <>Connect Wallet</>
+  )}
+</button>
+
           </div>
           <div>
             <Link href="https://twitter.com/asaolu_elijah">
