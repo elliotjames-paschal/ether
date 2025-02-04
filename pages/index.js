@@ -88,11 +88,10 @@ const Index = () => {
 
       <section className="container d-flex">
         <main>
-          <h1 className="main-title">Awesome DApp 🚀</h1>
+          <h1 className="main-title"> Haven 🚀</h1>
 
           <p className="main-desc">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem
-            suscipit perferendis tempore <br /> eveniet id pariatur error
+            Stability, Redesigned.
           </p>
 
           {/* ---- */}
