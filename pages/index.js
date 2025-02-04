@@ -101,7 +101,7 @@ const Index = () => {
             ) : client.isConnected ? (
               <>
                 <br />
-                <h2>You're connected ✅</h2>
+                <h2>You're connected. </h2>
                 <button
                   onClick={signMessage}
                   type="button"
