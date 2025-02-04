@@ -129,9 +129,25 @@ const Index = () => {
             ) : (
               <>
                 <br />
-                <button className="btn connect-btn" onClick={connectWeb3}>
-                  Connect Wallet
-                </button>
+                <button
+  onClick={connectWeb3}
+  style={{
+    backgroundColor: "white",
+    color: "black",
+    border: "2px solid black",
+    padding: "10px 15px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease, color 0.3s ease",
+    fontWeight: "bold",
+  }}
+  onMouseOver={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+  onMouseOut={(e) => (e.target.style.backgroundColor = "white")}
+>
+  Connect Wallet
+</button>
+
               </>
             )}
           </p>
