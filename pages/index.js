@@ -1,55 +1,76 @@
 import { useState, useEffect } from "react";
-import { signMessage } from "../utils/sign";
-
+import { ethers } from "ethers";
 import Link from "next/link";
-import Metamask from "../component/metamask";
 
 const Index = () => {
-  const [haveMetamask, sethaveMetamask] = useState(true);
-
-  const [client, setclient] = useState({
+  const [haveMetamask, setHaveMetamask] = useState(true);
+  const [client, setClient] = useState({
     isConnected: false,
+    provider: null,
+    signer: null,
+    contract: null,
   });
+
+  const contractAddress = "0x18D24Ec211d3Ba17a254D73C376Ed6DE99C7A271";
+  const contractABI = require("../utils/ABI.json");
 
   const checkConnection = async () => {
     const { ethereum } = window;
     if (ethereum) {
-      sethaveMetamask(true);
+      setHaveMetamask(true);
       const accounts = await ethereum.request({ method: "eth_accounts" });
       if (accounts.length > 0) {
-        setclient({
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, contractABI, signer);
+        setClient({
           isConnected: true,
           address: accounts[0],
+          provider,
+          signer,
+          contract,
         });
       } else {
-        setclient({
+        setClient({
           isConnected: false,
+          provider: null,
+          signer: null,
+          contract: null,
         });
       }
     } else {
-      sethaveMetamask(false);
+      setHaveMetamask(false);
     }
   };
 
   const connectWeb3 = async () => {
     try {
       const { ethereum } = window;
-
       if (!ethereum) {
         console.log("Metamask not detected");
         return;
       }
-
-      const accounts = await ethereum.request({
+      await ethereum.request({
         method: "eth_requestAccounts",
       });
-
-      setclient({
-        isConnected: true,
-        address: accounts[0],
-      });
+      checkConnection();
     } catch (error) {
       console.log("Error connecting to metamask", error);
+    }
+  };
+
+  const mintTokens = async (amount) => {
+    if (client.contract) {
+      const amountToMint = ethers.utils.parseUnits(amount.toString(), 18); // Assuming your token has 18 decimals
+      try {
+        const tx = await client.contract.mint(amountToMint, { value: ethers.utils.parseEther("0.01") }); // The ETH value should be calculated based on the minting cost
+        await tx.wait();
+        console.log("Minting successful");
+      } catch (error) {
+        console.error("Error minting tokens:", error);
+      }
+    } else {
+      console.log("Contract not connected");
     }
   };
 
@@ -59,39 +80,15 @@ const Index = () => {
 
   return (
     <>
-      {/* Navbar */}
       <nav className="fren-nav d-flex">
-        <div>
-          <h3>ABOUT</h3>
-        </div>
+        <div><h3>ABOUT</h3></div>
         <div className="d-flex" style={{ marginLeft: "auto" }}>
           <div>
-            <button
-  onClick={connectWeb3}
-  style={{
-    backgroundColor: "white",
-    color: "black",
-    border: "2px solid black",
-    padding: "10px 15px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease, color 0.3s ease",
-    fontWeight: "bold",
-  }}
-  onMouseOver={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-  onMouseOut={(e) => (e.target.style.backgroundColor = "white")}
->
-  {client.isConnected ? (
-    <>
-      {client.address.slice(0, 4)}...
-      {client.address.slice(38, 42)}
-    </>
-  ) : (
-    <>Connect Wallet</>
-  )}
-</button>
-
+            <button onClick={connectWeb3} style={{ backgroundColor: "white", color: "black", border: "2px solid black", padding: "10px 15px", fontSize: "16px", borderRadius: "8px", cursor: "pointer", transition: "background-color 0.3s ease, color 0.3s ease", fontWeight: "bold" }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "white")}>
+              {client.isConnected ? `${client.address.slice(0, 4)}...${client.address.slice(38, 42)}` : "Connect Wallet"}
+            </button>
           </div>
           <div>
             <Link href="https://twitter.com/asaolu_elijah">
@@ -100,58 +97,17 @@ const Index = () => {
           </div>
         </div>
       </nav>
-      {/* Navbar end */}
 
       <section className="container d-flex">
         <main>
-          <h1 className="main-title"> Haven </h1>
-
-          <p className="main-desc">
-            Stability, Redesigned.
-          </p>
-
-          {/* ---- */}
+          <h1 className="main-title">Haven</h1>
+          <p className="main-desc">Stability, Redesigned.</p>
           <p>
-            {!haveMetamask ? (
-              <Metamask />
-            ) : client.isConnected ? (
-              <>
-                <br />
-                <h2>You're connected. </h2>
-                <button
-                  onClick={signMessage}
-                  type="button"
-                  className="btn sign-btn"
-                >
-                  Sign Message
-                </button>
-              </>
-            ) : (
-              <>
-                <br />
-                <button
-  onClick={connectWeb3}
-  style={{
-    backgroundColor: "white",
-    color: "black",
-    border: "2px solid black",
-    padding: "10px 15px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease, color 0.3s ease",
-    fontWeight: "bold",
-  }}
-  onMouseOver={(e) => (e.target.style.backgroundColor = "#f0f0f0")}
-  onMouseOut={(e) => (e.target.style.backgroundColor = "white")}
->
-  Connect Wallet
-</button>
-
-              </>
+            {!haveMetamask ? "Please install Metamask." : client.isConnected ? "You're connected. Ready to mint?" : "Connect your wallet to get started."}
+            {client.isConnected && (
+              <button onClick={() => mintTokens(1)} className="btn">Mint Tokens</button>
             )}
           </p>
-          {/* ---- */}
         </main>
       </section>
     </>
@@ -159,3 +115,4 @@ const Index = () => {
 };
 
 export default Index;
+
